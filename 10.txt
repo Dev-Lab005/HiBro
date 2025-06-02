@@ -1,0 +1,23 @@
+trigger:
+  - main
+
+pool:
+  name: 'MyLocalPool'  # Your self-hosted agent pool name
+
+steps:
+  # Step 1: Checkout the Code from GitHub
+  - checkout: self
+    displayName: 'Checkout Code from GitHub'
+
+  # Step 2: Build and Run Unit Tests
+  - script: mvn clean test
+    displayName: 'Build and Run Unit Tests'
+
+  # Step 3: Publish Test Results (JUnit)
+  - task: PublishTestResults@2
+    displayName: 'Publish JUnit Test Results'
+    inputs:
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      failTaskOnFailedTests: true
+      mergeTestResults: true
+      testRunTitle: 'JUnit Tests'
